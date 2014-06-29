@@ -1,11 +1,16 @@
 #include <iostream>
 #include <iomanip>
 #include <thread>
+#include <cstdlib>
 #include <libusb.h>
 
 #define PACKET_SIZE 8
 
 int main(int argc, char* argv[]) {
+	if(argc < 2) {
+		std::cout << "Runs a command when the Dream Cheeky Big Red Button is pressed." << std::endl << "Usage: big-red-button <command>" << std::endl;
+		return 1;
+	}
 	libusb_device_handle *deviceHandle;
 	libusb_context *usbContext = NULL;
 	unsigned char data[PACKET_SIZE];
@@ -52,7 +57,7 @@ int main(int argc, char* argv[]) {
 			if(data[0] == 0x16) {
 				if(buttonPressed == false) {
 					buttonPressed = true;
-					system(argv[0]);
+					std::system(argv[1]);
 				}
 			} else {
 				buttonPressed = false;
