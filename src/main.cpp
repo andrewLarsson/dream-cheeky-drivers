@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
 		std::cout << "Runs a command when the Dream Cheeky Big Red Button is pressed." << std::endl << "Usage: big-red-button <command>" << std::endl;
 		return 1;
 	}
-	BigRedButton button;
+	BigRedButton button(std::chrono::milliseconds(10));
 	button.registerEventListener([&argv]() {
 		std::system(argv[1]);
 	});

@@ -1,8 +1,24 @@
 #include "BigRedButton.h"
 #include <iostream>
 
+BigRedButton::BigRedButton(std::chrono::duration<int, std::milli> sleep)
+	: USBDevice(DREAM_CHEEKY_VENDOR_ID, DREAM_CHEEKY_BIG_RED_BUTTON_PRODUCT_ID) {
+	this->init(sleep);
+}
+
 BigRedButton::BigRedButton(std::chrono::duration<int, std::milli> sleep, size_t index)
 	: USBDevice(DREAM_CHEEKY_VENDOR_ID, DREAM_CHEEKY_BIG_RED_BUTTON_PRODUCT_ID, index) {
+	this->init(sleep);
+}
+
+BigRedButton::~BigRedButton() {
+	this->stop();
+	if(!libusb_release_interface(this->device, HID_INTERFACE)) {
+		USBDevice::error("Cannot release device interface.");
+	}
+}
+
+void BigRedButton::init(std::chrono::duration<int, std::milli> sleep) {
 	if(libusb_kernel_driver_active(this->device, HID_INTERFACE)) {
 		libusb_detach_kernel_driver(this->device, HID_INTERFACE);
 	}
@@ -11,13 +27,6 @@ BigRedButton::BigRedButton(std::chrono::duration<int, std::milli> sleep, size_t 
 	}
 	this->running = false;
 	this->start(sleep);
-}
-
-BigRedButton::~BigRedButton() {
-	this->stop();
-	if(!libusb_release_interface(this->device, HID_INTERFACE)) {
-		USBDevice::error("Cannot release device interface.");
-	}
 }
 
 void BigRedButton::poll(std::chrono::duration<int, std::milli> sleep) {

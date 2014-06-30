@@ -27,14 +27,16 @@ private:
 	std::list<std::thread> eventListenerThreads;
 	std::thread _driver;
 	std::recursive_mutex _lock;
+	void init(std::chrono::duration<int, std::milli> sleep);
 	void _sync(std::function<void()> function);
 	void throwEvents();
 	void poll(std::chrono::duration<int, std::milli> sleep);
 public:
-	BigRedButton(std::chrono::duration<int, std::milli> sleep = std::chrono::milliseconds(10), size_t index = 0);
+	BigRedButton(std::chrono::duration<int, std::milli> sleep);
+	BigRedButton(std::chrono::duration<int, std::milli> sleep, size_t index);
 	~BigRedButton();
 	void registerEventListener(std::function<void()> eventListener);
-	void start(std::chrono::duration<int, std::milli> sleep = std::chrono::milliseconds(10));
+	void start(std::chrono::duration<int, std::milli> sleep);
 	void stop();
 };
 

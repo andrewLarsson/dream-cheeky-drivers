@@ -10,7 +10,9 @@ public:
 	typedef libusb_device_handle DeviceHandle;
 	typedef libusb_context USBContext;
 private:
+	static USBDevice::DeviceHandle* openDevice(uint16_t vendorID, uint16_t productID);
 	static USBDevice::DeviceHandle* openDevice(uint16_t vendorID, uint16_t productID, size_t index);
+	void init();
 protected:
 	USBDevice::DeviceHandle* device;
 	static class _Initializer {
@@ -23,7 +25,8 @@ protected:
 	} _initializer;
 	static void error(std::string message);
 public:
-	USBDevice(uint16_t vendorID, uint16_t productID, size_t index = 0);
+	USBDevice(uint16_t vendorID, uint16_t productID);
+	USBDevice(uint16_t vendorID, uint16_t productID, size_t index);
 	USBDevice(USBDevice::DeviceHandle* device);
 	virtual ~USBDevice();
 };

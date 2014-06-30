@@ -1,18 +1,19 @@
 #include "USBDevice.h"
 #include <iostream>
 
+USBDevice::USBDevice(uint16_t vendorID, uint16_t productID)
+	: device(USBDevice::openDevice(vendorID, productID)) {
+	this->init();
+}
+
 USBDevice::USBDevice(uint16_t vendorID, uint16_t productID, size_t index)
 	: device(USBDevice::openDevice(vendorID, productID, index)) {
-	if(!device) {
-		USBDevice::error("Could not open device.");
-	}
+	this->init();
 }
 
 USBDevice::USBDevice(USBDevice::DeviceHandle* device)
 	: device(device) {
-	if(!device) {
-		USBDevice::error("Could not open device.");
-	}
+	this->init();
 }
 
 USBDevice::~USBDevice() {
@@ -31,12 +32,22 @@ USBDevice::_Initializer::~_Initializer() {
 	libusb_exit(this->context);
 }
 
+void USBDevice::init() {
+	if(!device) {
+		USBDevice::error("Could not open device.");
+	}
+}
+
 USBDevice::USBContext* USBDevice::_Initializer::initializeLibraryContext() {
 	libusb_context* context = nullptr;
 	return ((libusb_init(&context) == 0)
 		? context
 		: nullptr
 	);
+}
+
+USBDevice::DeviceHandle* USBDevice::openDevice(uint16_t vendorID, uint16_t productID) {
+	return libusb_open_device_with_vid_pid(USBDevice::_initializer.context, vendorID, productID);
 }
 
 USBDevice::DeviceHandle* USBDevice::openDevice(uint16_t vendorID, uint16_t productID, size_t index) {
