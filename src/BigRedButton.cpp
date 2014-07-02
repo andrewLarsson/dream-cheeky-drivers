@@ -63,10 +63,13 @@ void BigRedButton::poll(std::chrono::duration<int, std::milli> sleep) {
 			if(buffer[0] == DREAM_CHEEKY_BIG_RED_BUTTON_PRESSED) {
 				if(buttonPressed == false) {
 					buttonPressed = true;
-					this->throwEvents();
+					this->throwPressedEvent();
 				}
 			} else {
-				buttonPressed = false;
+				if(buttonPressed == true) {
+					buttonPressed = false;
+					this->throwReleasedEvent();
+				}
 			}
 		}
 		std::this_thread::sleep_for(sleep);
@@ -79,17 +82,31 @@ void BigRedButton::_sync(std::function<void()> function) {
 	this->_lock.unlock();
 }
 
-void BigRedButton::throwEvents() {
+void BigRedButton::throwPressedEvent() {
 	this->_sync([&]() {
-		for(std::function<void()> eventListener : this->eventListeners) {
+		for(std::function<void()> eventListener : this->pressedEventListeners) {
 			this->eventListenerThreads.push_back(std::thread(eventListener));
 		}
 	});
 }
 
-void BigRedButton::registerEventListener(std::function<void()> eventListener) {
+void BigRedButton::throwReleasedEvent() {
 	this->_sync([&]() {
-		this->eventListeners.push_back(eventListener);
+		for(std::function<void()> eventListener : this->releasedEventListeners) {
+			this->eventListenerThreads.push_back(std::thread(eventListener));
+		}
+	});
+}
+
+void BigRedButton::registerPressedEventListener(std::function<void()> eventListener) {
+	this->_sync([&]() {
+		this->pressedEventListeners.push_back(eventListener);
+	});
+}
+
+void BigRedButton::registerReleasedEventListener(std::function<void()> eventListener) {
+	this->_sync([&]() {
+		this->releasedEventListeners.push_back(eventListener);
 	});
 }
 

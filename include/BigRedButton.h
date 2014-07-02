@@ -23,19 +23,22 @@ class BigRedButton
 	: public USBDevice {
 private:
 	bool running;
-	std::list<std::function<void()>> eventListeners;
+	std::list<std::function<void()>> pressedEventListeners;
+	std::list<std::function<void()>> releasedEventListeners;
 	std::list<std::thread> eventListenerThreads;
 	std::thread _driver;
 	std::recursive_mutex _lock;
 	void init(std::chrono::duration<int, std::milli> sleep);
 	void _sync(std::function<void()> function);
-	void throwEvents();
+	void throwPressedEvent();
+	void throwReleasedEvent();
 	void poll(std::chrono::duration<int, std::milli> sleep);
 public:
 	BigRedButton(std::chrono::duration<int, std::milli> sleep);
 	BigRedButton(std::chrono::duration<int, std::milli> sleep, size_t index);
 	~BigRedButton();
-	void registerEventListener(std::function<void()> eventListener);
+	void registerPressedEventListener(std::function<void()> eventListener);
+	void registerReleasedEventListener(std::function<void()> eventListener);
 	void start(std::chrono::duration<int, std::milli> sleep);
 	void stop();
 };

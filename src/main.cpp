@@ -8,21 +8,10 @@
 int main(int argc, char* argv[]) {
 	WebmailNotifier notifier;
 	BigRedButton button(std::chrono::milliseconds(10));
-	button.registerEventListener([&notifier]() {
+	button.registerPressedEventListener([&notifier]() {
 		notifier.setRGB(0xFF, 0x00, 0x00);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		notifier.setRGB(0x00, 0xFF, 0x00);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		notifier.setRGB(0x00, 0x00, 0xFF);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		notifier.setRGB(0xFF, 0xFF, 0x00);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		notifier.setRGB(0x00, 0xFF, 0xFF);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		notifier.setRGB(0xFF, 0x00, 0xFF);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		notifier.setRGB(0xFF, 0xFF, 0xFF);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	});
+	button.registerReleasedEventListener([&notifier]() {
 		notifier.setRGB(0x00, 0x00, 0x00);
 	});
 	for(;;) {

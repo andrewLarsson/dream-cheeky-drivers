@@ -18,15 +18,15 @@ WebmailNotifier::~WebmailNotifier() {
 }
 
 void WebmailNotifier::init() {
+	unsigned char reportInit0[HID_PACKET_SIZE] = DREAM_CHEEKY_WEBMAIL_NOTIFIER_INIT_0;
+	unsigned char reportInit1[HID_PACKET_SIZE] = DREAM_CHEEKY_WEBMAIL_NOTIFIER_INIT_1;
+	unsigned char reportInit2[HID_PACKET_SIZE] = DREAM_CHEEKY_WEBMAIL_NOTIFIER_INIT_2;
 	if(libusb_kernel_driver_active(this->device, HID_INTERFACE)) {
 		libusb_detach_kernel_driver(this->device, HID_INTERFACE);
 	}
 	if(libusb_claim_interface(this->device, HID_INTERFACE) < 0) {
 		USBDevice::error("Cannot claim device interface.");
 	}
-	unsigned char reportInit0[HID_PACKET_SIZE] = DREAM_CHEEKY_WEBMAIL_NOTIFIER_INIT_0;
-	unsigned char reportInit1[HID_PACKET_SIZE] = DREAM_CHEEKY_WEBMAIL_NOTIFIER_INIT_1;
-	unsigned char reportInit2[HID_PACKET_SIZE] = DREAM_CHEEKY_WEBMAIL_NOTIFIER_INIT_2;
 	libusb_control_transfer(
 		this->device,
 		LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE | LIBUSB_ENDPOINT_OUT,
