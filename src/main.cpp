@@ -1,3 +1,4 @@
+#include "WebmailNotifier.h"
 #include "BigRedButton.h"
 #include <iostream>
 #include <cstdlib>
@@ -5,13 +6,24 @@
 #include <chrono>
 
 int main(int argc, char* argv[]) {
-	if(argc < 2) {
-		std::cout << "Runs a command when the Dream Cheeky Big Red Button is pressed." << std::endl << "Usage: big-red-button <command>" << std::endl;
-		return 1;
-	}
+	WebmailNotifier notifier;
 	BigRedButton button(std::chrono::milliseconds(10));
-	button.registerEventListener([&argv]() {
-		std::system(argv[1]);
+	button.registerEventListener([&notifier]() {
+		notifier.setRGB(0xFF, 0x00, 0x00);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		notifier.setRGB(0x00, 0xFF, 0x00);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		notifier.setRGB(0x00, 0x00, 0xFF);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		notifier.setRGB(0xFF, 0xFF, 0x00);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		notifier.setRGB(0x00, 0xFF, 0xFF);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		notifier.setRGB(0xFF, 0x00, 0xFF);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		notifier.setRGB(0xFF, 0xFF, 0xFF);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		notifier.setRGB(0x00, 0x00, 0x00);
 	});
 	for(;;) {
 		std::this_thread::sleep_for(std::chrono::seconds(1));

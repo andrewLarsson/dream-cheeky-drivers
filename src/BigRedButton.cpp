@@ -1,5 +1,4 @@
 #include "BigRedButton.h"
-#include <iostream>
 
 BigRedButton::BigRedButton(std::chrono::duration<int, std::milli> sleep)
 	: USBDevice(DREAM_CHEEKY_VENDOR_ID, DREAM_CHEEKY_BIG_RED_BUTTON_PRODUCT_ID) {
