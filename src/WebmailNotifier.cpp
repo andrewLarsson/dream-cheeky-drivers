@@ -61,9 +61,9 @@ void WebmailNotifier::init() {
 
 void WebmailNotifier::setRGB(unsigned char red, unsigned char green, unsigned char blue) {
 	unsigned char reportColor[HID_PACKET_SIZE] = DREAM_CHEEKY_WEBMAIL_NOTIFIER_SET_RGB;
-	reportColor[0] = static_cast<unsigned char>(static_cast<int>(static_cast<int>(red) / 4));
-	reportColor[1] = static_cast<unsigned char>(static_cast<int>(static_cast<int>(green) / 4));
-	reportColor[2] = static_cast<unsigned char>(static_cast<int>(static_cast<int>(blue) / 4));
+	reportColor[0] = red >> 2;
+	reportColor[1] = green >> 2;
+	reportColor[2] = blue >> 2;
 	libusb_control_transfer(
 		this->device,
 		LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE | LIBUSB_ENDPOINT_OUT,
